@@ -2,6 +2,7 @@ package de.kazoosh.manhunt;
 
 import de.kazoosh.manhunt.TabComplete;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -35,19 +36,6 @@ public final class Main extends JavaPlugin implements Listener {
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(this, this);
         this.getCommand("manhunt").setTabCompleter(new TabComplete());
-
-//        TODO: WIP gui book
-//        ItemStack gui = new ItemStack(Material.BOOK);
-//        ItemMeta gui_meta = gui.getItemMeta();
-//        gui_meta.setDisplayName(ChatColor.GREEN + "Gauland");
-//        ArrayList<String> gui_lore = new ArrayList<>();
-//        gui_lore.add("Wir werden Sie jagen!");
-//        gui_meta.setLore(gui_lore);
-//        gui.setItemMeta(gui_meta);
-//
-//        for (Player p : Bukkit.getOnlinePlayers()) {
-//            p.getInventory().addItem(gui);
-//        }
     }
 
     @Override
@@ -194,9 +182,13 @@ public final class Main extends JavaPlugin implements Listener {
                     }
 
                     // Remove GUI Book from all Inventories
+                    ItemStack gui = new ItemStack(Material.WRITTEN_BOOK);
+                    ItemMeta gui_meta = gui.getItemMeta();
+                    gui_meta.setDisplayName(ChatColor.GREEN + "Gauland");
+                    gui.setItemMeta(gui_meta);
                     for (Player op : Bukkit.getOnlinePlayers()) {
-                        if (op.getInventory().contains(Material.BOOK)) {
-                            op.getInventory().removeItem(new ItemStack(Material.BOOK));
+                        if (op.getInventory().contains(gui)) {
+                            op.getInventory().removeItem(gui);
                         }
                     }
 
@@ -340,9 +332,7 @@ public final class Main extends JavaPlugin implements Listener {
                     meta.setLodestoneTracked(false);
                     meta.setLodestone(runner.getLocation());
                     item.setItemMeta(meta);
-                }
-
-                else if (hunter.getWorld().getEnvironment().toString() == "NORMAL") {
+                } else if (hunter.getWorld().getEnvironment().toString() == "NORMAL") {
                     if (!overworld.isEmpty()) {
                         if (overworld.size() > 1) {
                             for (int i = 1; i < overworld.size(); i++) {
@@ -367,9 +357,7 @@ public final class Main extends JavaPlugin implements Listener {
             } else {
                 hunter.sendMessage("Es ist kein Läufer eingetragen.");
             }
-        }
-
-        else if (item != null && item.getType() == Material.BOOK) {
+        } else if (item != null && item.getType() == Material.WRITTEN_BOOK) {
             hunter.performCommand("manhunt");
         }
     }
@@ -377,10 +365,14 @@ public final class Main extends JavaPlugin implements Listener {
     // Add Compass or Announce Winner
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
+        ItemStack gui = new ItemStack(Material.WRITTEN_BOOK);
+        ItemMeta gui_meta = gui.getItemMeta();
+        gui_meta.setDisplayName(ChatColor.GREEN + "Gauland");
+        gui.setItemMeta(gui_meta);
         Player p = e.getPlayer();
 
         if (runnersOrder.isEmpty() && huntersOrder.isEmpty()) {
-            p.getInventory().addItem(new ItemStack(Material.BOOK, 1));
+            p.getInventory().addItem(gui);
         }
         if (runnersOrder.contains(p.getName())) {
             if (!runnersOrder.isEmpty()) {
@@ -440,12 +432,16 @@ public final class Main extends JavaPlugin implements Listener {
     // Player Connect Event
     @EventHandler
     public void onConnect(PlayerJoinEvent e) {
-        Player p = (Player) e.getPlayer();
+        ItemStack gui = new ItemStack(Material.WRITTEN_BOOK);
+        ItemMeta gui_meta = gui.getItemMeta();
+        gui_meta.setDisplayName(ChatColor.GREEN + "Gauland");
+        gui.setItemMeta(gui_meta);
+        Player p = e.getPlayer();
         if (runnersOrder.size() == 0 && huntersOrder.size() == 0) {
             p.getInventory().clear();
         }
-        if (!p.getInventory().contains(new ItemStack(Material.BOOK))) {
-            p.getInventory().addItem(new ItemStack(Material.BOOK));
+        if (!p.getInventory().contains(gui)) {
+            p.getInventory().addItem(gui);
         }
     }
 }

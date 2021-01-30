@@ -27,16 +27,16 @@
 - [x] new spawn
 - [x] runner not same dimension
 - [x] freeze time default timer
+- [x] gui book special item
 
 ***
 ### unfinished:
-- [ ] gui book special item
-. [ ] final: only join one team
-
+ 
 ***
 ### optional
 - [ ] make text sound cooler
 - [ ] improve code quality
+- [ ] final: only join one team
 
 ***
 ### scrapped ideas
