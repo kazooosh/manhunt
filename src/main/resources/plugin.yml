@@ -1,0 +1,9 @@
+name: Manhunt
+version: ${project.version}
+main: de.kazoosh.manhunt.Main
+api-version: 1.16
+authors: [ kazoosh ]
+description: Manhunt Plugin
+commands:
+  manhunt:
+    description: Gauland ruft euch!
