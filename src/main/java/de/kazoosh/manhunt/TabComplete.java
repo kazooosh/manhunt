@@ -18,6 +18,7 @@ public class TabComplete implements TabCompleter {
             arguments.add("reset");
             arguments.add("start");
             arguments.add("help");
+            arguments.add("spawn");
         }
 
         List<String> results = new ArrayList<String>();

@@ -188,11 +188,9 @@ public final class Main extends JavaPlugin implements Listener {
             // Start the freeze time
             else if (args[0].equalsIgnoreCase("start")) {
                 if (!runnersOrder.isEmpty() && !huntersOrder.isEmpty()) {
-                    int timer;
-                    if (args[1].length() == 0) {
-                        timer = (int) 30;
-                    } else {
-                        timer = (int) Integer.parseInt(args[1]);
+                    int timer = 30;
+                    if (args.length > 1) {
+                        timer = Integer.parseInt(args[1]);
                     }
 
                     // Remove GUI Book from all Inventories
@@ -200,23 +198,25 @@ public final class Main extends JavaPlugin implements Listener {
                         if (op.getInventory().contains(Material.BOOK)) {
                             op.getInventory().removeItem(new ItemStack(Material.BOOK));
                         }
-                        Bukkit.broadcastMessage(ChatColor.RED + "Hunter:");
-                        if (huntersOrder.contains(op.getName())) {
-                            Bukkit.broadcastMessage(ChatColor.RED + op.getName());
-                        }
-                        Bukkit.broadcastMessage("---------------------------");
-                        Bukkit.broadcastMessage(ChatColor.BLUE + "Hunter:");
-                        if (runnersOrder.contains(op.getName())) {
-                            Bukkit.broadcastMessage(ChatColor.BLUE + op.getName());
-                        }
                     }
 
-                    timer = (int) timer*20;
+
+                    Bukkit.broadcastMessage(ChatColor.BLUE + "Runner:");
+                    for (int i = 0; i < runnersOrder.size(); i++) {
+                        Bukkit.broadcastMessage(ChatColor.BLUE + Bukkit.getPlayerExact(runnersOrder.get(i)).getName());
+                    }
+                    Bukkit.broadcastMessage("-------------------");
+                    Bukkit.broadcastMessage(ChatColor.RED + "Hunter:");
+                    for (int i = 0; i < huntersOrder.size(); i++) {
+                        Bukkit.broadcastMessage(ChatColor.RED + Bukkit.getPlayerExact(runnersOrder.get(i)).getName());
+                    }
+
+                    timer = timer*20;
                     for (int i = 0; i < huntersOrder.size(); i++) {
                         Player p = Bukkit.getPlayerExact(huntersOrder.get(i));
 
                         // Potion Effects
-                        int amp = 10;
+                        int amp = 255;
                         p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, timer, amp));
                         p.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, timer, amp));
                         p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, timer, amp));
@@ -234,6 +234,7 @@ public final class Main extends JavaPlugin implements Listener {
                             Bukkit.broadcastMessage("Die Jagd beginnt!");
                         }
                     }, timer);
+
                 } else {
                     sender.sendMessage("Es muss mindestens ein Spieler in jedem Team sein.");
                 }
@@ -246,22 +247,29 @@ public final class Main extends JavaPlugin implements Listener {
                 sender.sendMessage(ChatColor.WHITE + "/manhunt hunter <player>");
                 sender.sendMessage(ChatColor.RED + "/manhunt reset");
                 sender.sendMessage(ChatColor.WHITE + "/manhunt start <seconds>");
+                sender.sendMessage(ChatColor.WHITE + "/manhunt spawn");
             }
 
-            // Set New Spawn (Y Level Bug)
+            // Set New Spawn
             else if (args[0].equalsIgnoreCase("spawn")) {
-                Player p = (Player) Bukkit.getServer().getPlayerExact(sender.getName());
-                World w = (World) p.getWorld();
-                int xCord = new Random().nextInt(100 + 1)  + 1;
-                int zCord = new Random().nextInt(100 + 1)  + 1;
+                Player p =  Bukkit.getServer().getPlayerExact(sender.getName());
+                World w = p.getWorld();
+                int xCord = (new Random().nextInt(100 + 1)  + 1) * 1000;
+                int zCord = (new Random().nextInt(100 + 1)  + 1) * 1000;
                 w.loadChunk(xCord, zCord);
-                int yCord = w.getHighestBlockYAt(xCord,zCord);
-                p.sendMessage("Koordinaten: " + xCord*1000 + " " + yCord + " " + zCord*1000);
-                Location loc = new Location(w, xCord*1000, yCord, zCord*1000);
-                w.setSpawnLocation(loc);
-                for (Player op : Bukkit.getOnlinePlayers()) {
-                    op.teleport(loc);
-                }
+
+                Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+                    @Override
+                    public void run() {
+                        int yCord = (w.getHighestBlockYAt(xCord,zCord) + 1);
+                        p.sendMessage("Koordinaten: x:" + xCord + " y:" + yCord + " z:" + zCord);
+                        Location loc = new Location(w, xCord, yCord, zCord);
+                        w.setSpawnLocation(loc);
+                        for (Player op : Bukkit.getOnlinePlayers()) {
+                            op.teleport(loc);
+                        }
+                    }
+                }, 40L); // 2 seconds
             }
 
             // Set New Target (Testing)
@@ -299,11 +307,11 @@ public final class Main extends JavaPlugin implements Listener {
                 List<String> nether = new ArrayList<String>();
                 List<String> overworld = new ArrayList<String>();
 
-                // Get Runners in Your Dim
+                hunter.sendMessage("WORLD: " + hunter.getWorld().getEnvironment());
 
                 for (int iter = 0; iter < runnersOrder.size(); iter++) {
                     Player run = Bukkit.getPlayerExact(runnersOrder.get(iter));
-                    if (run.getWorld().getEnvironment().toString() == "NETHER" || run.getWorld().getEnvironment().toString() == "END") {
+                    if (run.getWorld().getEnvironment().toString() == "NETHER" || run.getWorld().getEnvironment().toString() == "THE_END") {
                         overworld.remove(run.getName());
                         nether.add(run.getName());
                     } else {
@@ -312,7 +320,7 @@ public final class Main extends JavaPlugin implements Listener {
                     }
                 }
 
-                if (hunter.getWorld().getEnvironment().toString() == "NETHER" || hunter.getWorld().getEnvironment().toString() == "END") {
+                if (hunter.getWorld().getEnvironment().toString() == "NETHER" || hunter.getWorld().getEnvironment().toString() == "THE_END") {
                     if (!nether.isEmpty()) {
                         if (nether.size() > 1) {
                             for (int i = 1; i < nether.size(); i++) {
@@ -334,7 +342,7 @@ public final class Main extends JavaPlugin implements Listener {
                     item.setItemMeta(meta);
                 }
 
-                else if (hunter.getWorld().getEnvironment().toString() == "OVERWORLD") {
+                else if (hunter.getWorld().getEnvironment().toString() == "NORMAL") {
                     if (!overworld.isEmpty()) {
                         if (overworld.size() > 1) {
                             for (int i = 1; i < overworld.size(); i++) {
@@ -411,7 +419,7 @@ public final class Main extends JavaPlugin implements Listener {
                 p.performCommand("manhunt reset");
             }
             else if (e.getCurrentItem().getType().equals(Material.BREAD)) {
-                p.performCommand("manhunt start 30");
+                p.performCommand("manhunt start");
             }
             else if (e.getCurrentItem().getType().equals(Material.FEATHER)) {
                 p.sendMessage("Gamemode: " + p.getGameMode().toString().toLowerCase());
@@ -433,7 +441,11 @@ public final class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void onConnect(PlayerJoinEvent e) {
         Player p = (Player) e.getPlayer();
-        p.getInventory().clear();
-        p.getInventory().addItem(new ItemStack(Material.BOOK));
+        if (runnersOrder.size() == 0 && huntersOrder.size() == 0) {
+            p.getInventory().clear();
+        }
+        if (!p.getInventory().contains(new ItemStack(Material.BOOK))) {
+            p.getInventory().addItem(new ItemStack(Material.BOOK));
+        }
     }
 }

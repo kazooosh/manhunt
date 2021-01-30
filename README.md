@@ -24,20 +24,23 @@
 - [x] spectator no noclip bug
 - [x] eastereggs
 - [x] streamline commands
+- [x] new spawn
+- [x] runner not same dimension
+- [x] freeze time default timer
 
 ***
 ### unfinished:
-- [ ] way for runners to find each other
-- [ ] freeze time default timer
-- [ ] runner not same dimension
 - [ ] gui book special item
-- [ ] new spawn 
 . [ ] final: only join one team
 
 ***
 ### optional
 - [ ] make text sound cooler
 - [ ] improve code quality
+
+***
+### scrapped ideas
+- [ ] way for runners to find each other
 
 ***
  > ich hasse noah
