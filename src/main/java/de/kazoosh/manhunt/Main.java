@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -107,48 +108,56 @@ public final class Main extends JavaPlugin implements Listener {
 
             // Add/Remove a Hunter
             if (args[0].equalsIgnoreCase("hunter")) {
-                if (!huntersOrder.contains(args[1])) {
-                    Player hunter = Bukkit.getServer().getPlayerExact(args[1]);
-                    if (!hunter.getInventory().contains(Material.COMPASS)) {
-                        hunter.getInventory().addItem(new ItemStack(Material.COMPASS, 1));
-                    }
-                    huntersOrder.add(args[1]);
-                    sender.sendMessage(hunter.getName() + " wurde als Jäger eingetragen.");
-                    if (sender.getName() != hunter.getName()) {
-                        hunter.sendMessage("Du wurdest als Jäger eingetragen.");
+                if (args.length != 1) {
+                    if (!huntersOrder.contains(args[1])) {
+                        Player hunter = Bukkit.getServer().getPlayerExact(args[1]);
+                        if (!hunter.getInventory().contains(Material.COMPASS)) {
+                            hunter.getInventory().addItem(new ItemStack(Material.COMPASS, 1));
+                        }
+                        huntersOrder.add(args[1]);
+                        sender.sendMessage(hunter.getName() + " wurde als Jäger eingetragen.");
+                        if (sender.getName() != hunter.getName()) {
+                            hunter.sendMessage("Du wurdest als Jäger eingetragen.");
+                        }
+                    } else {
+                        huntersOrder.remove(args[1]);
+                        Player hunter = Bukkit.getServer().getPlayerExact(args[1]);
+//                    hunter.getInventory().clear();
+                        sender.sendMessage(hunter.getName() + " wurde als Jäger ausgetragen.");
+                        if (sender.getName() != hunter.getName()) {
+                            hunter.sendMessage("Du wurdest als Jäger ausgetragen.");
+                        }
                     }
                 } else {
-                    huntersOrder.remove(args[1]);
-                    Player hunter = Bukkit.getServer().getPlayerExact(args[1]);
-//                    hunter.getInventory().clear();
-                    sender.sendMessage(hunter.getName() + " wurde als Jäger ausgetragen.");
-                    if (sender.getName() != hunter.getName()) {
-                        hunter.sendMessage("Du wurdest als Jäger ausgetragen.");
-                    }
+                    sender.sendMessage("Bitte nutze " + ChatColor.RED + "/manhunt hunter <name>");
                 }
             }
 
             // Add/Remove a Runner
             else if (args[0].equalsIgnoreCase("runner")) {
-                if (!runnersOrder.contains(args[1])) {
-                    Player runner = Bukkit.getServer().getPlayerExact(args[1]);
+                if (args.length != 1) {
+                    if (!runnersOrder.contains(args[1])) {
+                        Player runner = Bukkit.getServer().getPlayerExact(args[1]);
 //                    runner.getInventory().addItem(new ItemStack(Material.CLOCK, 1));
-                    if (runner.getInventory().contains(Material.COMPASS)) {
-                        runner.getInventory().removeItem(new ItemStack(Material.COMPASS));
-                    }
-                    runnersOrder.add(runner.getName());
-                    sender.sendMessage(runner.getName() + " wurde als Läufer eingetragen.");
-                    if (sender.getName() != runner.getName()) {
-                        runner.sendMessage("Du wurdest als Läufer eingetragen.");
+                        if (runner.getInventory().contains(Material.COMPASS)) {
+                            runner.getInventory().removeItem(new ItemStack(Material.COMPASS));
+                        }
+                        runnersOrder.add(runner.getName());
+                        sender.sendMessage(runner.getName() + " wurde als Läufer eingetragen.");
+                        if (sender.getName() != runner.getName()) {
+                            runner.sendMessage("Du wurdest als Läufer eingetragen.");
+                        }
+                    } else {
+                        Player runner = Bukkit.getServer().getPlayerExact(args[1]);
+//                    runner.getInventory().clear();
+                        runnersOrder.remove(runner.getName());
+                        sender.sendMessage(runner.getName() + " wurde als Läufer ausgetragen.");
+                        if (sender.getName() != runner.getName()) {
+                            runner.sendMessage("Du wurdest als Läufer ausgetragen.");
+                        }
                     }
                 } else {
-                    Player runner = Bukkit.getServer().getPlayerExact(args[1]);
-//                    runner.getInventory().clear();
-                    runnersOrder.remove(runner.getName());
-                    sender.sendMessage(runner.getName() + " wurde als Läufer ausgetragen.");
-                    if (sender.getName() != runner.getName()) {
-                        runner.sendMessage("Du wurdest als Läufer ausgetragen.");
-                    }
+                    sender.sendMessage("Bitte nutze " + ChatColor.RED + "/manhunt runner <name>");
                 }
             }
 
@@ -182,9 +191,11 @@ public final class Main extends JavaPlugin implements Listener {
                     }
 
                     // Remove GUI Book from all Inventories
-                    ItemStack gui = new ItemStack(Material.WRITTEN_BOOK);
+                    ItemStack gui = new ItemStack(Material.BOOK);
+                    gui.addUnsafeEnchantment(Enchantment.LURE,1);
                     ItemMeta gui_meta = gui.getItemMeta();
                     gui_meta.setDisplayName(ChatColor.GREEN + "Gauland");
+                    gui_meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     gui.setItemMeta(gui_meta);
                     for (Player op : Bukkit.getOnlinePlayers()) {
                         if (op.getInventory().contains(gui)) {
@@ -249,6 +260,7 @@ public final class Main extends JavaPlugin implements Listener {
                 int xCord = (new Random().nextInt(100 + 1)  + 1) * 1000;
                 int zCord = (new Random().nextInt(100 + 1)  + 1) * 1000;
                 w.loadChunk(xCord, zCord);
+                p.sendMessage("Dieser Vorgang dauert einen kurzen Moment.");
 
                 Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
                     @Override
@@ -277,7 +289,10 @@ public final class Main extends JavaPlugin implements Listener {
                 } else {
                     sender.sendMessage("Nope, den gibt es nicht.");
                 }
-            } else {
+            }
+
+            // unknown cmd
+            else {
                 sender.sendMessage("Bruh, den Befehl kenn ich nicht.");
             }
         }
@@ -357,7 +372,7 @@ public final class Main extends JavaPlugin implements Listener {
             } else {
                 hunter.sendMessage("Es ist kein Läufer eingetragen.");
             }
-        } else if (item != null && item.getType() == Material.WRITTEN_BOOK) {
+        } else if (item != null && item.getType() == Material.BOOK) {
             hunter.performCommand("manhunt");
         }
     }
@@ -365,9 +380,11 @@ public final class Main extends JavaPlugin implements Listener {
     // Add Compass or Announce Winner
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
-        ItemStack gui = new ItemStack(Material.WRITTEN_BOOK);
+        ItemStack gui = new ItemStack(Material.BOOK);
+        gui.addUnsafeEnchantment(Enchantment.LURE,1);
         ItemMeta gui_meta = gui.getItemMeta();
         gui_meta.setDisplayName(ChatColor.GREEN + "Gauland");
+        gui_meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         gui.setItemMeta(gui_meta);
         Player p = e.getPlayer();
 
@@ -432,9 +449,11 @@ public final class Main extends JavaPlugin implements Listener {
     // Player Connect Event
     @EventHandler
     public void onConnect(PlayerJoinEvent e) {
-        ItemStack gui = new ItemStack(Material.WRITTEN_BOOK);
+        ItemStack gui = new ItemStack(Material.BOOK);
+        gui.addUnsafeEnchantment(Enchantment.LURE,1);
         ItemMeta gui_meta = gui.getItemMeta();
         gui_meta.setDisplayName(ChatColor.GREEN + "Gauland");
+        gui_meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         gui.setItemMeta(gui_meta);
         Player p = e.getPlayer();
         if (runnersOrder.size() == 0 && huntersOrder.size() == 0) {
