@@ -29,4 +29,4 @@ To access the gui Right/Left click the book or use the commands.
 ### Final words
 This is my first plugin, so if there are any bugs or missing features feel free to contact me.
 I had a blast creating this and testing it with my friends, and even though we never finished a game due to fall damage, lava or mobs, we really hope you have fun with your friends too.
-Finally, thanks [Dream](https://www.youtube.com/c/dream) and his friends for all of those amazing manhunt videos.
+Finally, I'd like to thank [Dream](https://www.youtube.com/c/dream) and his friends for all of those amazing manhunt videos and inspiring me to create this plugin.
