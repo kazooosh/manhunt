@@ -6,4 +6,4 @@ authors: [ kazoosh ]
 description: Manhunt Plugin
 commands:
   manhunt:
-    description: Gauland ruft euch!
+    description: Let the hunt begin!
