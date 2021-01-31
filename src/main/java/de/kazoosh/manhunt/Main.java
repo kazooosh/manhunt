@@ -59,44 +59,44 @@ public final class Main extends JavaPlugin implements Listener {
                     ItemStack spawn = new ItemStack(Material.RED_BED);
 
                     ItemMeta hunter_meta = hunter.getItemMeta();
-                    hunter_meta.setDisplayName(ChatColor.RED + "Jäger");
+                    hunter_meta.setDisplayName(ChatColor.RED + "Hunter");
                     ArrayList<String> hunter_lore = new ArrayList<>();
-                    hunter_lore.add("Als Jäger hinzufügen / entfernen");
+                    hunter_lore.add("Add / Remove hunter");
                     hunter_meta.setLore(hunter_lore);
                     hunter.setItemMeta(hunter_meta);
 
                     ItemMeta runner_meta = runner.getItemMeta();
-                    runner_meta.setDisplayName(ChatColor.BLUE + "Läufer");
+                    runner_meta.setDisplayName(ChatColor.BLUE + "Runner");
                     ArrayList<String> runner_lore = new ArrayList<>();
-                    runner_lore.add("Als Läufer hinzufügen / entfernen");
+                    runner_lore.add("Add / Remove runner");
                     runner_meta.setLore(runner_lore);
                     runner.setItemMeta(runner_meta);
 
                     ItemMeta reset_meta = reset.getItemMeta();
                     reset_meta.setDisplayName(ChatColor.GOLD + "Reset");
                     ArrayList<String> reset_lore = new ArrayList<>();
-                    reset_lore.add("Spieleinstellungen setzen");
+                    reset_lore.add("Reset settings");
                     reset_meta.setLore(reset_lore);
                     reset.setItemMeta(reset_meta);
 
                     ItemMeta start_meta = start.getItemMeta();
                     start_meta.setDisplayName(ChatColor.AQUA + "Start");
                     ArrayList<String> start_lore = new ArrayList<>();
-                    start_lore.add("Die Jagd beginnt!");
+                    start_lore.add("Start the game");
                     start_meta.setLore(start_lore);
                     start.setItemMeta(start_meta);
 
                     ItemMeta spectator_meta = spectator.getItemMeta();
                     spectator_meta.setDisplayName(ChatColor.GRAY + "Spectator");
                     ArrayList<String> spectator_lore = new ArrayList<>();
-                    spectator_lore.add("Gamemode auf Spectator setzen");
+                    spectator_lore.add("Join spectator mode");
                     spectator_meta.setLore(spectator_lore);
                     spectator.setItemMeta(spectator_meta);
 
                     ItemMeta spawn_meta = spawn.getItemMeta();
                     spawn_meta.setDisplayName(ChatColor.AQUA + "Spawn");
                     ArrayList<String> spawn_lore = new ArrayList<>();
-                    spawn_lore.add("Neuer Spawn");
+                    spawn_lore.add("Set new spawn");
                     spawn_meta.setLore(spawn_lore);
                     spawn.setItemMeta(spawn_meta);
 
@@ -115,21 +115,21 @@ public final class Main extends JavaPlugin implements Listener {
                             hunter.getInventory().addItem(new ItemStack(Material.COMPASS, 1));
                         }
                         huntersOrder.add(args[1]);
-                        sender.sendMessage(hunter.getName() + " wurde als Jäger eingetragen.");
+                        sender.sendMessage(hunter.getName() + " is now a hunter");
                         if (sender.getName() != hunter.getName()) {
-                            hunter.sendMessage("Du wurdest als Jäger eingetragen.");
+                            hunter.sendMessage("You joined the hunters");
                         }
                     } else {
                         huntersOrder.remove(args[1]);
                         Player hunter = Bukkit.getServer().getPlayerExact(args[1]);
 //                    hunter.getInventory().clear();
-                        sender.sendMessage(hunter.getName() + " wurde als Jäger ausgetragen.");
+                        sender.sendMessage(hunter.getName() + " was removed from the hunters");
                         if (sender.getName() != hunter.getName()) {
-                            hunter.sendMessage("Du wurdest als Jäger ausgetragen.");
+                            hunter.sendMessage("You have been removed from the hunters");
                         }
                     }
                 } else {
-                    sender.sendMessage("Bitte nutze " + ChatColor.RED + "/manhunt hunter <name>");
+                    sender.sendMessage("Please use " + ChatColor.RED + "/manhunt hunter <name>");
                 }
             }
 
@@ -143,21 +143,21 @@ public final class Main extends JavaPlugin implements Listener {
                             runner.getInventory().removeItem(new ItemStack(Material.COMPASS));
                         }
                         runnersOrder.add(runner.getName());
-                        sender.sendMessage(runner.getName() + " wurde als Läufer eingetragen.");
+                        sender.sendMessage(runner.getName() + " is now a runner");
                         if (sender.getName() != runner.getName()) {
-                            runner.sendMessage("Du wurdest als Läufer eingetragen.");
+                            runner.sendMessage("You joined the runners");
                         }
                     } else {
                         Player runner = Bukkit.getServer().getPlayerExact(args[1]);
 //                    runner.getInventory().clear();
                         runnersOrder.remove(runner.getName());
-                        sender.sendMessage(runner.getName() + " wurde als Läufer ausgetragen.");
+                        sender.sendMessage(runner.getName() + " was removed from the runners");
                         if (sender.getName() != runner.getName()) {
-                            runner.sendMessage("Du wurdest als Läufer ausgetragen.");
+                            runner.sendMessage("You have been removed from the runners");
                         }
                     }
                 } else {
-                    sender.sendMessage("Bitte nutze " + ChatColor.RED + "/manhunt runner <name>");
+                    sender.sendMessage("Please use " + ChatColor.RED + "/manhunt runner <name>");
                 }
             }
 
@@ -194,7 +194,7 @@ public final class Main extends JavaPlugin implements Listener {
                     ItemStack gui = new ItemStack(Material.BOOK);
                     gui.addUnsafeEnchantment(Enchantment.LURE,1);
                     ItemMeta gui_meta = gui.getItemMeta();
-                    gui_meta.setDisplayName(ChatColor.GREEN + "Gauland");
+                    gui_meta.setDisplayName(ChatColor.GREEN + "Manhunt");
                     gui_meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     gui.setItemMeta(gui_meta);
                     for (Player op : Bukkit.getOnlinePlayers()) {
@@ -228,18 +228,18 @@ public final class Main extends JavaPlugin implements Listener {
                         p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, timer, amp));
                     }
 
-                    Bukkit.broadcastMessage("Die Jagd beginnt in " + timer/20 + " Sekunden");
+                    Bukkit.broadcastMessage("The hunt begins in " + timer/20 + " seconds");
 
                     BukkitScheduler scheduler = getServer().getScheduler();
                     scheduler.scheduleSyncDelayedTask(this, new Runnable() {
                         @Override
                         public void run() {
-                            Bukkit.broadcastMessage("Die Jagd beginnt!");
+                            Bukkit.broadcastMessage("The hunt is on!");
                         }
                     }, timer);
 
                 } else {
-                    sender.sendMessage("Es muss mindestens ein Spieler in jedem Team sein.");
+                    sender.sendMessage("There has to be atleast one player in each team");
                 }
 
             }
@@ -260,13 +260,13 @@ public final class Main extends JavaPlugin implements Listener {
                 int xCord = (new Random().nextInt(100 + 1)  + 1) * 1000;
                 int zCord = (new Random().nextInt(100 + 1)  + 1) * 1000;
                 w.loadChunk(xCord, zCord);
-                p.sendMessage("Dieser Vorgang dauert einen kurzen Moment.");
+                p.sendMessage("This may take a few seconds");
 
                 Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
                     @Override
                     public void run() {
                         int yCord = (w.getHighestBlockYAt(xCord,zCord) + 1);
-                        p.sendMessage("Koordinaten: x:" + xCord + " y:" + yCord + " z:" + zCord);
+                        p.sendMessage("New Spawn: x:" + xCord + " y:" + yCord + " z:" + zCord);
                         Location loc = new Location(w, xCord, yCord, zCord);
                         w.setSpawnLocation(loc);
                         for (Player op : Bukkit.getOnlinePlayers()) {
@@ -276,24 +276,9 @@ public final class Main extends JavaPlugin implements Listener {
                 }, 40L); // 2 seconds
             }
 
-            // Set New Target (Testing)
-            else if (args[0].equalsIgnoreCase("setTarget")) {
-                if (!args[1].isEmpty()) {
-                    Player runner = Bukkit.getPlayerExact(args[2]);
-                    if (runnersOrder.get(0) == runner.getName()) {
-                        sender.sendMessage(runner + " ist bereits das aktive Ziel.");
-                    } else {
-                        runnersOrder.clear();
-                        runnersOrder.add(runner.getName());
-                    }
-                } else {
-                    sender.sendMessage("Nope, den gibt es nicht.");
-                }
-            }
-
             // unknown cmd
             else {
-                sender.sendMessage("Bruh, den Befehl kenn ich nicht.");
+                sender.sendMessage("Please use + " + ChatColor.RED + "/manhunt help" + ChatColor.WHITE + " to see all available commands");
             }
         }
         return false;
@@ -340,10 +325,10 @@ public final class Main extends JavaPlugin implements Listener {
                             runner = Bukkit.getPlayerExact(nether.get(0));
                         }
                     } else {
-                        hunter.sendMessage("Es befindet sich kein Läufer in deiner Dimension.");
+                        hunter.sendMessage("There is no runner in your dimension");
                     }
 
-                    hunter.sendMessage("Dein Kompass zeigt auf: " + runner.getName());
+                    hunter.sendMessage("Target: " + runner.getName());
                     meta.setLodestoneTracked(false);
                     meta.setLodestone(runner.getLocation());
                     item.setItemMeta(meta);
@@ -360,17 +345,17 @@ public final class Main extends JavaPlugin implements Listener {
                             runner = Bukkit.getPlayerExact(overworld.get(0));
                         }
                     } else {
-                        hunter.sendMessage("Es befindet sich kein Läufer in deiner Dimension.");
+                        hunter.sendMessage("There is no runner in your dimension");
                     }
 
                     ItemMeta defaultCompass = Bukkit.getItemFactory().getItemMeta(Material.COMPASS);
                     item.setItemMeta(defaultCompass);
-                    hunter.sendMessage("Dein Kompass zeigt auf: " + runner.getName());
+                    hunter.sendMessage("Target: " + runner.getName());
                     hunter.setCompassTarget(runner.getLocation());
                 }
 
             } else {
-                hunter.sendMessage("Es ist kein Läufer eingetragen.");
+                hunter.sendMessage("No active runners");
             }
         } else if (item != null && item.getType() == Material.BOOK) {
             hunter.performCommand("manhunt");
@@ -383,7 +368,7 @@ public final class Main extends JavaPlugin implements Listener {
         ItemStack gui = new ItemStack(Material.BOOK);
         gui.addUnsafeEnchantment(Enchantment.LURE,1);
         ItemMeta gui_meta = gui.getItemMeta();
-        gui_meta.setDisplayName(ChatColor.GREEN + "Gauland");
+        gui_meta.setDisplayName(ChatColor.GREEN + "Manhunt");
         gui_meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         gui.setItemMeta(gui_meta);
         Player p = e.getPlayer();
@@ -395,12 +380,12 @@ public final class Main extends JavaPlugin implements Listener {
             if (!runnersOrder.isEmpty()) {
                 p.setGameMode(GameMode.SPECTATOR);
                 runnersOrder.remove(p.getName());
-                Bukkit.broadcastMessage(p.getName() + " wurde eliminiert.");
+                Bukkit.broadcastMessage(p.getName() + " has been eliminated.");
                 if (runnersOrder.isEmpty()) {
-                    Bukkit.broadcastMessage("Die Jäger haben gewonnen!");
+                    Bukkit.broadcastMessage("The hunters have won!");
                 }
             } else {
-                Bukkit.broadcastMessage("Die Jäger haben gewonnen!");
+                Bukkit.broadcastMessage("The hunters have won!");
             }
         } else if (huntersOrder.contains(p.getName())) {
             p.getInventory().addItem(new ItemStack(Material.COMPASS, 1));
@@ -433,10 +418,10 @@ public final class Main extends JavaPlugin implements Listener {
             else if (e.getCurrentItem().getType().equals(Material.FEATHER)) {
                 p.sendMessage("Gamemode: " + p.getGameMode().toString().toLowerCase());
                 if (p.getGameMode().toString().equalsIgnoreCase("SPECTATOR")) {
-                    Bukkit.broadcastMessage(p.getName() + " ist nun im Survival-Modus");
+                    Bukkit.broadcastMessage(p.getName() + " has changed his gamemode to survival");
                     p.setGameMode(GameMode.SURVIVAL);
                 } else {
-                    Bukkit.broadcastMessage(p.getName() + " ist nun im Spectator-Modus");
+                    Bukkit.broadcastMessage(p.getName() + " has changed his gamemode to spectator");
                     p.setGameMode(GameMode.SPECTATOR);
                 }
             }
@@ -452,7 +437,7 @@ public final class Main extends JavaPlugin implements Listener {
         ItemStack gui = new ItemStack(Material.BOOK);
         gui.addUnsafeEnchantment(Enchantment.LURE,1);
         ItemMeta gui_meta = gui.getItemMeta();
-        gui_meta.setDisplayName(ChatColor.GREEN + "Gauland");
+        gui_meta.setDisplayName(ChatColor.GREEN + "Manhunt");
         gui_meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         gui.setItemMeta(gui_meta);
         Player p = e.getPlayer();
